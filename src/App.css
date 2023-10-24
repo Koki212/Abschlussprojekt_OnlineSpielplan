@@ -1,0 +1,40 @@
+#root {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.logo {
+    height: 300px;
+    padding: 5px;
+    margin: 0 auto;
+    will-change: filter;
+    transition: filter 500ms;
+}
+.logo:hover {
+    filter: drop-shadow(0 0 5em #31aa21aa);
+}
+
+@keyframes logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    a:nth-of-type().logo {
+        animation: logo-spin infinite 20s linear;
+    }
+}
+
+.newCompetition {
+    padding: 5px;
+}
+
+.searchCompetition {
+    padding: 5px;
+}
