@@ -3,11 +3,26 @@ import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import soccerLogo from "/soccer_logo.svg";
 import { useState } from "react";
-import * as React from "react";
+//import * as React from "react";
 import { useNavigate } from "react-router-dom";
+import CompetitionModel from "./components/models/CompetitionModel";
 
 export default function NewCompetition() {
     const navigate = useNavigate();
+    const [competitionName, setCompetitionName] = useState("");
+    const changeInput = (event) => {
+        setCompetitionName(event.target.value);
+    };
+
+    const API_ENDPOINT_CreateCompetition =
+        "http://localhost:5285/api/competition/CreateCompetition?name=" +
+        competitionName;
+
+    const API_ENDPOINT_GetCompetition =
+        "http://localhost:5285/api/competition/GetCompetitionByName?name=" +
+        competitionName;
+
+    console.log(competitionName);
 
     return (
         <>
@@ -29,12 +44,42 @@ export default function NewCompetition() {
                     margin="small"
                     id="fullWidth"
                     label="Bitte geben Sie den Namen des Turniers ein"
+                    // save the value of the input field
+                    onChange={changeInput}
+                    value={competitionName}
                 />
                 <Button
                     className="nextbuttons"
                     variant="contained"
                     onClick={async () => {
-                        navigate("/newcompetition/addteams");
+                        console.log(competitionName);
+                        await fetch(API_ENDPOINT_CreateCompetition, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                name: competitionName,
+                            }),
+                        });
+                        await fetch(API_ENDPOINT_GetCompetition, {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                CompetitionModel.CompetitionId =
+                                    data.CompetitionId;
+                                CompetitionModel.CompetitionName = data.Name;
+                                console.log(data);
+                            });
+                        navigate(
+                            "/id=" +
+                                CompetitionModel.CompetitionId +
+                                "/addteams"
+                        );
                     }}
                 >
                     Weiter

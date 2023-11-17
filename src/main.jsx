@@ -18,7 +18,7 @@ const router = createBrowserRouter([
         element: <NewCompetition />,
     },
     {
-        path: "/newcompetition/addteams",
+        path: "/:competitionId/addteams",
         element: <AddTeams />,
     },
     {
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
         element: <SearchCompetition />,
     },
     {
-        path: "/competition",
+        path: "/competition/:competitionId/:competitionName",
         element: <Competition />,
     },
 ]);

@@ -4,17 +4,42 @@ import Button from "@mui/material/Button";
 import { TextField } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { useState } from "react";
-import * as React from "react";
-import { useNavigate } from "react-router-dom";
+//import * as React from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Team from "./components/models/Team";
+import CompetitionModel from "./components/models/CompetitionModel";
 
 export default function AddTeams() {
     const navigate = useNavigate();
-    const [teamsList, setTeamsList] = useState([{ team: "" }]);
+    const competitionName = CompetitionModel.CompetitionName;
+    let { competitionId } = useParams();
+    const [teamsList, setTeamsList] = useState([
+        new Team({ CompetitionId: competitionId }),
+    ]);
 
-    console.log(teamsList);
+    //if team is added to textfield, increase counter
+    let teamCounter = teamsList.length;
+
+    const handleTeamChange = (e, index) => {
+        const { value } = e.target;
+        const list = [...teamsList];
+        list[index].TeamName = value;
+        setTeamsList(list);
+        //console.log(list);
+    };
 
     const handleAddTeam = () => {
-        setTeamsList([...teamsList, { team: "" }]);
+        if (teamCounter === 16) {
+            return alert(
+                "Es können maximal 16 Mannschaften hinzugefügt werden"
+            );
+        }
+        setTeamsList([
+            ...teamsList,
+            new Team({
+                CompetitionId: competitionId,
+            }),
+        ]);
     };
 
     const handleRemoveTeam = (index) => {
@@ -23,12 +48,16 @@ export default function AddTeams() {
         setTeamsList(list);
     };
 
-    const handleTeamChange = (e, index) => {
-        const { name, value } = e.target;
-        const list = [...teamsList];
-        list[index][name] = value;
-        setTeamsList(list);
-    };
+    console.log(teamsList);
+
+    const API_ENDPOINT_CreateTeam =
+        "http://localhost:5285/api/team/CreateTeam?TeamName=" +
+        teamsList.TeamName +
+        "&CompetitionId=" +
+        teamsList.CompetitionId;
+
+    // const API_ENDPOINT_CreateTeamObject =
+    //     "http://localhost:5285/api/team/CreateTeamObject" + teamsList.TeamName;
 
     return (
         <>
@@ -37,7 +66,8 @@ export default function AddTeams() {
                     <img src={soccerLogo} className="logo" alt="Soccer logo" />
                 </a>
             </div>
-            <h2>Mannschaften hinzufügen</h2>
+            <h1>{competitionName}</h1>
+            <h2>Mannschaften hinzufügen({teamCounter}/16)</h2>
             <Box
                 sx={{
                     width: 700,
@@ -45,9 +75,11 @@ export default function AddTeams() {
                     "& button": { m: 1 },
                 }}
             >
+                {/* map through the teamsList array and display the textfield*/}
                 {teamsList.map((singleTeam, index) => (
                     <div key={index}>
                         <Stack direction="row" spacing={2} margin={1}>
+                            <p>{index + 1}.</p>
                             <TextField
                                 margin="normal"
                                 size="small"
@@ -73,7 +105,20 @@ export default function AddTeams() {
                                 variant="contained"
                                 color="success"
                                 margin="normal"
-                                onClick={handleAddTeam}
+                                onClick={async () => {
+                                    handleAddTeam();
+                                    await fetch(API_ENDPOINT_CreateTeam, {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify({
+                                            TeamName: teamsList.TeamName,
+                                            CompetitionId: Team.CompetitionId,
+                                        }),
+                                    });
+                                    console.log(teamsList);
+                                }}
                             >
                                 hinzufügen
                             </Button>
@@ -95,7 +140,7 @@ export default function AddTeams() {
                     padding="normal"
                     color="error"
                     onClick={async () => {
-                        await fetch("http://localhost:5173/");
+                        navigate("/newcompetition");
                     }}
                 >
                     abbrechen
@@ -106,7 +151,9 @@ export default function AddTeams() {
                     margin="normal"
                     padding="normal"
                     onClick={async () => {
-                        navigate("/competition");
+                        navigate(
+                            "/competition/id=" + CompetitionModel.CompetitionId
+                        );
                     }}
                 >
                     Weiter
