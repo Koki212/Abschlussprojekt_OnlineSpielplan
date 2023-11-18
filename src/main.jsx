@@ -26,7 +26,7 @@ const router = createBrowserRouter([
         element: <SearchCompetition />,
     },
     {
-        path: "/competition/:competitionId/:competitionName",
+        path: "/competition/:competitionId",
         element: <Competition />,
     },
 ]);
