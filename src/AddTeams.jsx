@@ -50,14 +50,9 @@ export default function AddTeams() {
 
     console.log(teamsList);
 
-    const API_ENDPOINT_CreateTeam =
-        "http://localhost:5285/api/team/CreateTeam?TeamName=" +
-        teamsList.TeamName +
-        "&CompetitionId=" +
+    const API_ENDPOINT_CreateTeamObject =
+        "http://localhost:5285/api/team/CreateTeamObject?CompetitionId=id" +
         teamsList.CompetitionId;
-
-    // const API_ENDPOINT_CreateTeamObject =
-    //     "http://localhost:5285/api/team/CreateTeamObject" + teamsList.TeamName;
 
     return (
         <>
@@ -75,7 +70,6 @@ export default function AddTeams() {
                     "& button": { m: 1 },
                 }}
             >
-                {/* map through the teamsList array and display the textfield*/}
                 {teamsList.map((singleTeam, index) => (
                     <div key={index}>
                         <Stack direction="row" spacing={2} margin={1}>
@@ -107,14 +101,14 @@ export default function AddTeams() {
                                 margin="normal"
                                 onClick={async () => {
                                     handleAddTeam();
-                                    await fetch(API_ENDPOINT_CreateTeam, {
+                                    await fetch(API_ENDPOINT_CreateTeamObject, {
                                         method: "POST",
                                         headers: {
                                             "Content-Type": "application/json",
                                         },
                                         body: JSON.stringify({
-                                            TeamName: teamsList.TeamName,
-                                            CompetitionId: Team.CompetitionId,
+                                            CompetitionId: competitionId,
+                                            TeamName: singleTeam.TeamName,
                                         }),
                                     });
                                     console.log(teamsList);
@@ -152,7 +146,7 @@ export default function AddTeams() {
                     padding="normal"
                     onClick={async () => {
                         navigate(
-                            "/competition/id=" + CompetitionModel.CompetitionId
+                            "/competition/" + CompetitionModel.CompetitionId
                         );
                     }}
                 >

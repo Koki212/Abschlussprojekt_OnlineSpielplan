@@ -76,9 +76,7 @@ export default function NewCompetition() {
                                 console.log(data);
                             });
                         navigate(
-                            "/id=" +
-                                CompetitionModel.CompetitionId +
-                                "/addteams"
+                            "/" + CompetitionModel.CompetitionId + "/addteams"
                         );
                     }}
                 >
