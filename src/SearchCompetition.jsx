@@ -3,9 +3,21 @@ import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import soccerLogo from "/soccer_logo.svg";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import CompetitionModel from "./components/models/CompetitionModel";
 
 export default function SearchCompetition() {
     const navigate = useNavigate();
+
+    const [competitionName, setCompetitionName] = useState("");
+    const changeInput = (event) => {
+        setCompetitionName(event.target.value);
+    };
+
+    const API_ENDPOINT_GetCompetitonByName =
+        "http://localhost:5285/api/competition/GetCompetitionByName?name=" +
+        competitionName;
+
     return (
         <>
             <div>
@@ -26,12 +38,32 @@ export default function SearchCompetition() {
                     margin="normal"
                     id="fullWidth"
                     label="Bitte geben Sie den Namen des Turniers ein"
+                    // save the value of the input field
+                    onChange={changeInput}
+                    value={competitionName}
                 />
                 <Button
                     className="nextbuttons"
                     variant="contained"
                     onClick={async () => {
-                        alert("Turnier wurde nicht gefunden");
+                        console.log(competitionName);
+                        await fetch(API_ENDPOINT_GetCompetitonByName, {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                CompetitionModel.CompetitionId =
+                                    data.CompetitionId;
+                                CompetitionModel.CompetitionName = data.Name;
+                                console.log(data);
+                            });
+                        navigate(
+                            "/competition/" + CompetitionModel.CompetitionId
+                        );
+                        // alert("Turnier wurde nicht gefunden");
                     }}
                 >
                     suchen

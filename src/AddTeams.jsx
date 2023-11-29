@@ -21,11 +21,10 @@ export default function AddTeams() {
     let teamCounter = teamsList.length;
 
     const handleTeamChange = (e, index) => {
-        const { value } = e.target;
+        //const { value } = e.target;
         const list = [...teamsList];
-        list[index].TeamName = value;
+        list[index].TeamName = e.target.value;
         setTeamsList(list);
-        //console.log(list);
     };
 
     const handleAddTeam = () => {
@@ -51,8 +50,8 @@ export default function AddTeams() {
     console.log(teamsList);
 
     const API_ENDPOINT_CreateTeamObject =
-        "http://localhost:5285/api/team/CreateTeamObject?CompetitionId=id" +
-        teamsList.CompetitionId;
+        "http://localhost:5285/api/team/CreateTeamObject?CompetitionId=" +
+        competitionId;
 
     return (
         <>
@@ -111,7 +110,6 @@ export default function AddTeams() {
                                             TeamName: singleTeam.TeamName,
                                         }),
                                     });
-                                    console.log(teamsList);
                                 }}
                             >
                                 hinzufügen
@@ -150,7 +148,7 @@ export default function AddTeams() {
                         );
                     }}
                 >
-                    Weiter
+                    weiter
                 </Button>
             </Box>
         </>

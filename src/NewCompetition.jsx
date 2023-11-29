@@ -3,7 +3,6 @@ import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import soccerLogo from "/soccer_logo.svg";
 import { useState } from "react";
-//import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import CompetitionModel from "./components/models/CompetitionModel";
 
@@ -18,7 +17,7 @@ export default function NewCompetition() {
         "http://localhost:5285/api/competition/CreateCompetition?name=" +
         competitionName;
 
-    const API_ENDPOINT_GetCompetition =
+    const API_ENDPOINT_GetCompetitionByName =
         "http://localhost:5285/api/competition/GetCompetitionByName?name=" +
         competitionName;
 
@@ -41,7 +40,7 @@ export default function NewCompetition() {
             >
                 <TextField
                     fullWidth
-                    margin="small"
+                    margin="dense"
                     id="fullWidth"
                     label="Bitte geben Sie den Namen des Turniers ein"
                     // save the value of the input field
@@ -62,7 +61,7 @@ export default function NewCompetition() {
                                 name: competitionName,
                             }),
                         });
-                        await fetch(API_ENDPOINT_GetCompetition, {
+                        await fetch(API_ENDPOINT_GetCompetitionByName, {
                             method: "GET",
                             headers: {
                                 "Content-Type": "application/json",
@@ -73,7 +72,10 @@ export default function NewCompetition() {
                                 CompetitionModel.CompetitionId =
                                     data.CompetitionId;
                                 CompetitionModel.CompetitionName = data.Name;
-                                console.log(data);
+                                console.log(
+                                    "Fetching competition data from backend: CompetitionId= " +
+                                        data.CompetitionId
+                                );
                             });
                         navigate(
                             "/" + CompetitionModel.CompetitionId + "/addteams"

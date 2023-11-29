@@ -7,6 +7,7 @@ import NewCompetition from "./NewCompetition.jsx";
 import SearchCompetition from "./SearchCompetition.jsx";
 import Competition from "./Competition.jsx";
 import AddTeams from "./AddTeams.jsx";
+//import AddTeamsCopy from "./AddTeamsCopy.jsx";
 
 const router = createBrowserRouter([
     {

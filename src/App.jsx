@@ -1,7 +1,11 @@
-import { useNavigate } from "react-router-dom";
+// importing basic settings
 import soccerLogo from "/soccer_logo.svg";
-import "./App.css";
+// import react
+import { useNavigate } from "react-router-dom";
+// import components from MUI
 import Button from "@mui/material/Button";
+// import project components
+import "./App.css";
 
 function App() {
     const navigate = useNavigate();
