@@ -6,16 +6,16 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 //import CompetitionModel from "../models/CompetitionModel";
-//import CompetitionModel from "./components/models/CompetitionModel";
+import CompetitionModel from "./components/models/CompetitionModel";
 import * as React from "react";
 //import Competition from "../../Competition";
 //import TeamData from "../models/TeamData";
 
 // fetch data from backend
-// const API_ENDPOINT_GetTeamsByCompetitionId =
-//     "http://localhost:5285/api/team/GetAllTeamsByCompetitionId?id=" +
-//     CompetitionModel.CompetitionId;
-// console.log("CompetitionID = " + CompetitionModel.CompetitionId);
+const API_ENDPOINT_GetTeamsByCompetitionId =
+    "http://localhost:5285/api/team/GetAllTeamsByCompetitionId?id=" +
+    CompetitionModel.CompetitionId;
+console.log("CompetitionID = " + CompetitionModel.CompetitionId);
 
 // export function GroupTableData() {
 //     const [TeamData, setTeamData] = React.useState([]);

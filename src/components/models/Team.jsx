@@ -1,5 +1,6 @@
 class Team {
     constructor({
+        TeamId,
         TeamName,
         GamesPlayed,
         GamesWon,
@@ -10,6 +11,7 @@ class Team {
         Points,
         CompetitionId,
     } = {}) {
+        this.TeamId = TeamId || "";
         this.TeamName = TeamName || "";
         this.GamesPlayed = GamesPlayed || 0;
         this.GamesWon = GamesWon || 0;
