@@ -5,75 +5,50 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-//import CompetitionModel from "../models/CompetitionModel";
-import CompetitionModel from "./components/models/CompetitionModel";
+import CompetitionModel from "../models/CompetitionModel";
+import Team from "../models/Team";
 import * as React from "react";
-//import Competition from "../../Competition";
-//import TeamData from "../models/TeamData";
-
-// fetch data from backend
-const API_ENDPOINT_GetTeamsByCompetitionId =
-    "http://localhost:5285/api/team/GetAllTeamsByCompetitionId?id=" +
-    CompetitionModel.CompetitionId;
-console.log("CompetitionID = " + CompetitionModel.CompetitionId);
-
-// export function GroupTableData() {
-//     const [TeamData, setTeamData] = React.useState([]);
-//     const fetchTeamData = async () => {
-//         try {
-//             const response = await fetch(API_ENDPOINT_GetTeamsByCompetitionId);
-//             const data = await response.json();
-//             setTeamData(data);
-//         } catch (error) {
-//             console.error("Fehler beim Abrufen der Teamdaten:", error);
-//         }
-//         return { TeamData };
-//     };
-//     fetchTeamData();
-//     console.log("Log from GroupTable: " + TeamData);
-// }
-
-//initialize Teamdata which is send from Competition.jsx
-// const TeamData = Competition.TeamData;
-// console.log(TeamData);
-
-// const TeamData = [
-//     {
-//         TeamName: TeamData.TeamName,
-//         GamesPlayed: TeamData.GamesPlayed,
-//         GamesWon: TeamData.GamesWon,
-//         GamesDraw: TeamData.GamesDraw,
-//         GamesLost: TeamData.GamesLost,
-//         GoalsScored: TeamData.GoalsScored,
-//         GoalsConceded: TeamData.GoalsConceded,
-//         Points: TeamData.Points,
-//         CompetitionId: TeamData.CompetitionId,
-//     },
-// ];
-
-//map data to table
-// const GroupTableData = TeamData.map((team) => (
-//     <TableRow
-//         key={team.TeamName}
-//         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-//     >
-//         <TableCell component="th" scope="row">
-//             {team.TeamName}
-//         </TableCell>
-//         <TableCell align="center">{team.GamesPlayed}</TableCell>
-//         <TableCell align="center">{team.GamesWon}</TableCell>
-//         <TableCell align="center">{team.GamesDraw}</TableCell>
-//         <TableCell align="center">{team.GamesLost}</TableCell>
-//         <TableCell align="center">{team.GoalsScored}</TableCell>
-//         <TableCell align="center">{team.GoalsConceeded}</TableCell>
-//         <TableCell align="center">{team.GoalDifference}</TableCell>
-//         <TableCell align="center">{team.Points}</TableCell>
-//     </TableRow>
-// ));
+import { useParams } from "react-router-dom";
 
 export function GroupTable() {
-    const TeamData = React.useContext(TeamDataContext);
-    console.log("Log from GroupTable: " + TeamData);
+    let { competitionId } = useParams();
+    // API Endpoint
+    const API_ENDPOINT_GetTeamsByCompetitionId =
+        "http://localhost:5285/api/team/GetAllTeamsByCompetitionId?id=" +
+        competitionId;
+    console.log("CompetitionID = " + CompetitionModel.CompetitionId);
+    const [TeamData, setTeamData] = React.useState([]);
+    // function to get data from backend
+    function getDataFromBackend() {
+        fetch(API_ENDPOINT_GetTeamsByCompetitionId, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("Fehler beim Abrufen der Daten");
+                }
+            })
+            .then((data) => {
+                Team.TeamName = data.TeamName;
+                Team.GamesPlayed = data.GamesPlayed;
+                Team.GamesWon = data.GamesWon;
+                Team.GamesDraw = data.GamesDraw;
+                Team.GamesLost = data.GamesLost;
+                Team.GoalsScored = data.GoalsScored;
+                Team.GoalsConceded = data.GoalsConceded;
+                Team.Points = data.Points;
+                setTeamData(data);
+                console.log("Log from GroupTable: " + TeamData);
+            })
+            .catch((error) => {
+                console.error("Fehler beim Abrufen der Daten:", error);
+            });
+    }
     return (
         <div>
             <TableContainer component={Paper}>
@@ -95,7 +70,47 @@ export function GroupTable() {
                             <TableCell align="center">Pkt</TableCell>
                         </TableRow>
                     </TableHead>
-                    {<TableBody>{/*TeamData.TeamName*/}</TableBody>}
+                    <TableBody>
+                        {getDataFromBackend()}
+                        {TeamData.map((team) => (
+                            <TableRow
+                                key={team.TeamName}
+                                sx={{
+                                    "&:last-child td, &:last-child th": {
+                                        border: 0,
+                                    },
+                                }}
+                            >
+                                <TableCell component="th" scope="row">
+                                    {team.TeamName}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {team.GamesPlayed}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {team.GamesWon}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {team.GamesDraw}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {team.GamesLost}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {team.GoalsScored}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {team.GoalsConceded}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {team.GoalsScored - team.GoalsConceded}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {team.Points}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
                 </Table>
             </TableContainer>
         </div>
