@@ -10,7 +10,7 @@ import Team from "../models/Team";
 import * as React from "react";
 import { useParams } from "react-router-dom";
 
-export function GroupTable() {
+export function GroupTableB() {
     let { competitionId } = useParams();
     // API Endpoint
     const API_ENDPOINT_GetTeamsByCompetitionId =
@@ -48,18 +48,10 @@ export function GroupTable() {
             .catch((error) => {
                 console.error("Fehler beim Abrufen der Daten:", error);
             });
-        // sorting table by points
-        // TeamData.sort(function (a, b) {
-        //     return b.Points - a.Points;
-        // });
     }
 
     // slice the array to get only the first 4 teams
-    // const groupA = TeamData.slice(0, 3);
-    // const groupB = TeamData.slice(4, 7);
-    // const groupC = TeamData.slice(8, 11);
-    // const groupD = TeamData.slice(12, 16);
-    // console.log("GroupA: " + groupA);
+    const groupB = TeamData.slice(4, 8);
 
     return (
         <div>
@@ -84,7 +76,7 @@ export function GroupTable() {
                     </TableHead>
                     <TableBody>
                         {getDataFromBackend()}
-                        {TeamData.map((team) => (
+                        {groupB.map((team) => (
                             <TableRow
                                 key={team.TeamName}
                                 sx={{
