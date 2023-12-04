@@ -43,14 +43,16 @@ export function GroupTableA() {
                 Team.GoalsConceded = data.GoalsConceded;
                 Team.Points = data.Points;
                 setTeamData(data);
-                console.log("Log from GroupTable: " + TeamData);
+                const sortedData = data
+                    .slice(0, 4)
+                    .sort((a, b) => b.Points - a.Points);
+                setTeamData(sortedData);
+                //console.log("Log from GroupTable: " + TeamData);
             })
             .catch((error) => {
                 console.error("Fehler beim Abrufen der Daten:", error);
             });
     }
-    // slice the array to get only the first 4 teams
-    const groupA = TeamData.slice(0, 4);
 
     return (
         <div>
@@ -74,8 +76,10 @@ export function GroupTableA() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {getDataFromBackend()}
-                        {groupA.map((team) => (
+                        {React.useEffect(() => {
+                            getDataFromBackend();
+                        }, [])}
+                        {TeamData.map((team) => (
                             <TableRow
                                 key={team.TeamName}
                                 sx={{
