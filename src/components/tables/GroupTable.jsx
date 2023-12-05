@@ -1,3 +1,11 @@
+// importing React
+import React, { useEffect } from "react";
+//importing react-router-dom
+import { useParams } from "react-router-dom";
+// importing project components
+import CompetitionModel from "../models/CompetitionModel";
+import Team from "../models/Team";
+// importing components from MUI
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -5,12 +13,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import CompetitionModel from "../models/CompetitionModel";
-import Team from "../models/Team";
-import * as React from "react";
-import { useParams } from "react-router-dom";
+// importing PropTypes from MUI
+import PropTypes from "prop-types";
 
-export function GroupTable() {
+export function GroupTable(props) {
+    const { dataPartition } = props;
     let { competitionId } = useParams();
     // API Endpoint
     const API_ENDPOINT_GetTeamsByCompetitionId =
@@ -18,48 +25,45 @@ export function GroupTable() {
         competitionId;
     console.log("CompetitionID = " + CompetitionModel.CompetitionId);
     const [TeamData, setTeamData] = React.useState([]);
-    // function to get data from backend
-    function getDataFromBackend() {
-        fetch(API_ENDPOINT_GetTeamsByCompetitionId, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error("Fehler beim Abrufen der Daten");
-                }
-            })
-            .then((data) => {
-                Team.TeamName = data.TeamName;
-                Team.GamesPlayed = data.GamesPlayed;
-                Team.GamesWon = data.GamesWon;
-                Team.GamesDraw = data.GamesDraw;
-                Team.GamesLost = data.GamesLost;
-                Team.GoalsScored = data.GoalsScored;
-                Team.GoalsConceded = data.GoalsConceded;
-                Team.Points = data.Points;
-                setTeamData(data);
-                console.log("Log from GroupTable: " + TeamData);
-            })
-            .catch((error) => {
-                console.error("Fehler beim Abrufen der Daten:", error);
-            });
-        // sorting table by points
-        // TeamData.sort(function (a, b) {
-        //     return b.Points - a.Points;
-        // });
-    }
 
-    // slice the array to get only the first 4 teams
-    // const groupA = TeamData.slice(0, 3);
-    // const groupB = TeamData.slice(4, 7);
-    // const groupC = TeamData.slice(8, 11);
-    // const groupD = TeamData.slice(12, 16);
-    // console.log("GroupA: " + groupA);
+    useEffect(() => {
+        // function to get data from backend
+        function getDataFromBackend() {
+            fetch(API_ENDPOINT_GetTeamsByCompetitionId, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("Fehler beim Abrufen der Daten");
+                    }
+                })
+                .then((data) => {
+                    Team.TeamName = data.TeamName;
+                    Team.GamesPlayed = data.GamesPlayed;
+                    Team.GamesWon = data.GamesWon;
+                    Team.GamesDraw = data.GamesDraw;
+                    Team.GamesLost = data.GamesLost;
+                    Team.GoalsScored = data.GoalsScored;
+                    Team.GoalsConceded = data.GoalsConceded;
+                    Team.Points = data.Points;
+                    setTeamData(data);
+                    const sortedData = data
+                        .slice(...dataPartition)
+                        .sort((a, b) => b.Points - a.Points);
+                    setTeamData(sortedData);
+                })
+                .catch((error) => {
+                    console.error("Fehler beim Abrufen der Daten:", error);
+                });
+        }
+
+        getDataFromBackend();
+    }, [dataPartition, API_ENDPOINT_GetTeamsByCompetitionId]);
 
     return (
         <div>
@@ -83,7 +87,6 @@ export function GroupTable() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {getDataFromBackend()}
                         {TeamData.map((team) => (
                             <TableRow
                                 key={team.TeamName}
@@ -128,3 +131,7 @@ export function GroupTable() {
         </div>
     );
 }
+
+GroupTable.propTypes = {
+    dataPartition: PropTypes.array.isRequired,
+};

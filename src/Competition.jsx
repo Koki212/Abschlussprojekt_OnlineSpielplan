@@ -11,11 +11,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CompetitionModel from "./components/models/CompetitionModel";
 import { GroupMatchList } from "./components/lists/GroupMatchList.jsx";
 import { KoPhaseMatchList } from "./components/lists/KoPhaseMatchList.jsx";
-//import { GroupTable } from "./components/tables/GroupTable.jsx";
-import { GroupTableA } from "./components/tables/GroupTableA.jsx";
-import { GroupTableB } from "./components/tables/GroupTableB.jsx";
-import { GroupTableC } from "./components/tables/GroupTableC.jsx";
-import { GroupTableD } from "./components/tables/GroupTableD.jsx";
+import { GroupTable } from "./components/tables/GroupTable.jsx";
 
 export default function Competition() {
     const competitionName = CompetitionModel.CompetitionName;
@@ -43,20 +39,22 @@ export default function Competition() {
                 }}
                 expanded={expanded === "panel1"}
                 onChange={handleChange("panel1")}
-                onClick={() => {
-                    GroupTableA();
-                    GroupTableB();
-                    GroupTableC();
-                    GroupTableD();
-                }}
             >
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>Gruppen</Typography>
                 </AccordionSummary>
-                <AccordionDetails>Gruppe A{GroupTableA()}</AccordionDetails>
-                <AccordionDetails>Gruppe B{GroupTableB()}</AccordionDetails>
-                <AccordionDetails>Gruppe C{GroupTableC()}</AccordionDetails>
-                <AccordionDetails>Gruppe D{GroupTableD()}</AccordionDetails>
+                <AccordionDetails>
+                    Gruppe A<GroupTable dataPartition={[0, 4]} />
+                </AccordionDetails>
+                <AccordionDetails>
+                    Gruppe B<GroupTable dataPartition={[4, 8]} />
+                </AccordionDetails>
+                <AccordionDetails>
+                    Gruppe C<GroupTable dataPartition={[8, 12]} />
+                </AccordionDetails>
+                <AccordionDetails>
+                    Gruppe D<GroupTable dataPartition={[12, 16]} />
+                </AccordionDetails>
             </Accordion>
             <Accordion
                 sx={{
@@ -72,7 +70,18 @@ export default function Competition() {
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>Gruppenspiele</Typography>
                 </AccordionSummary>
-                <AccordionDetails>{GroupMatchList()}</AccordionDetails>
+                <AccordionDetails>
+                    Gruppe A<GroupMatchList dataPartition={[0, 4]} />
+                </AccordionDetails>
+                <AccordionDetails>
+                    Gruppe B<GroupMatchList dataPartition={[4, 8]} />
+                </AccordionDetails>
+                <AccordionDetails>
+                    Gruppe C<GroupMatchList dataPartition={[8, 12]} />
+                </AccordionDetails>
+                <AccordionDetails>
+                    Gruppe D<GroupMatchList dataPartition={[12, 16]} />
+                </AccordionDetails>
             </Accordion>
             <Accordion
                 sx={{

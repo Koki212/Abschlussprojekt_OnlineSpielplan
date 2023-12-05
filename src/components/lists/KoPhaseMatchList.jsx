@@ -23,11 +23,11 @@ export function KoPhaseMatchList() {
                 <ListItemButton onClick={handleClickOpenDialog}>
                     Erster Gruppe A vs Zweiter Gruppe B
                 </ListItemButton>
-                <MatchDialog
+                {/* <MatchDialog
                     selectedValue={selectedValue}
                     open={open}
                     onClose={handleCloseDialog}
-                />
+                /> */}
                 <ListItemButton onClick={handleClickOpenDialog}>
                     Erster Gruppe B vs Zweiter Gruppe A
                 </ListItemButton>

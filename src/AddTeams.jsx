@@ -1,11 +1,15 @@
-import Box from "@mui/material/Box";
+// importing basic settings
 import soccerLogo from "/soccer_logo.svg";
+// importing react
+import { useState } from "react";
+// importing react-router-dom
+import { useNavigate, useParams } from "react-router-dom";
+import Box from "@mui/material/Box";
+// importing components from MUI
 import Button from "@mui/material/Button";
 import { TextField } from "@mui/material";
 import Stack from "@mui/material/Stack";
-import { useState } from "react";
-//import * as React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+// importing project components
 import Team from "./components/models/Team";
 import CompetitionModel from "./components/models/CompetitionModel";
 
@@ -17,17 +21,16 @@ export default function AddTeams() {
         new Team({ CompetitionId: competitionId }),
     ]);
 
-    //if team is added to textfield, increase counter
     let teamCounter = teamsList.length;
 
     const handleTeamChange = (e, index) => {
-        //const { value } = e.target;
         const list = [...teamsList];
         list[index].TeamName = e.target.value;
         setTeamsList(list);
     };
 
     const handleAddTeam = () => {
+        //if team is added to textfield, increase counter
         if (teamCounter === 16) {
             return alert(
                 "Es können maximal 16 Mannschaften hinzugefügt werden"

@@ -1,14 +1,20 @@
-import Button from "@mui/material/Button";
-import { TextField } from "@mui/material";
-import Box from "@mui/material/Box";
+// importing basic settings
 import soccerLogo from "/soccer_logo.svg";
-import { useNavigate } from "react-router-dom";
+// importing react
 import { useState } from "react";
+// importing react-router-dom
+import { useNavigate } from "react-router-dom";
+// importing components from MUI
+import Button from "@mui/material/Button";
+import { List, TextField } from "@mui/material";
+import Box from "@mui/material/Box";
+import ListItemButton from "@mui/material/ListItemButton";
+// importing project components
 import CompetitionModel from "./components/models/CompetitionModel";
 
 export default function SearchCompetition() {
     const navigate = useNavigate();
-
+    const [allCompetitionList, setAllCompetitionList] = useState([]);
     const [competitionName, setCompetitionName] = useState("");
     const changeInput = (event) => {
         setCompetitionName(event.target.value);
@@ -17,6 +23,32 @@ export default function SearchCompetition() {
     const API_ENDPOINT_GetCompetitonByName =
         "http://localhost:5285/api/competition/GetCompetitionByName?name=" +
         competitionName;
+
+    const API_ENDPOINT_GetAllCompetitions =
+        "http://localhost:5285/api/competition/GetAllCompetitions";
+
+    function getAllCompetitions() {
+        fetch(API_ENDPOINT_GetAllCompetitions, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("Fehler beim Abrufen der Daten");
+                }
+            })
+            .then((data) => {
+                setAllCompetitionList(data);
+            })
+            .catch((error) => {
+                console.log("Fehler beim Abrufen der Daten: " + error);
+            });
+    }
+    getAllCompetitions();
 
     return (
         <>
@@ -63,11 +95,25 @@ export default function SearchCompetition() {
                         navigate(
                             "/competition/" + CompetitionModel.CompetitionId
                         );
-                        // alert("Turnier wurde nicht gefunden");
                     }}
                 >
                     suchen
                 </Button>
+                <List>
+                    {allCompetitionList.map((singleCompetition, index) => (
+                        <ListItemButton
+                            onClick={() => {
+                                navigate(
+                                    "/competition/" +
+                                        singleCompetition.CompetitionId
+                                );
+                            }}
+                            key={index}
+                        >
+                            {singleCompetition.Name}
+                        </ListItemButton>
+                    ))}
+                </List>
             </Box>
             <div className="card">
                 <Button

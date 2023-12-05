@@ -1,14 +1,24 @@
-import React from "react";
+// importing React
+import React, { useEffect } from "react";
+// importing react-router-dom
+import { useParams } from "react-router-dom";
+// importing components from MUI
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
+// importing PropTypes from MUI
+import PropTypes from "prop-types";
+// importing project components
 import { MatchDialog } from "../dialogs/MatchDialog";
+import Team from "../models/Team";
 
-export function GroupMatchList() {
+export function GroupMatchList(props) {
+    const { dataPartition } = props;
     const [open, setOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState("");
+    const [selectedTeams, setSelectedTeams] = React.useState([]);
 
-    const handleClickOpenDialog = () => {
+    const handleClickOpenDialog = (teamA, teamB) => {
+        setSelectedTeams([teamA, teamB]);
         setOpen(true);
     };
 
@@ -16,97 +26,84 @@ export function GroupMatchList() {
         setOpen(false);
         setSelectedValue(value);
     };
+
+    let { competitionId } = useParams();
+    // API Endpoint
+    const API_ENDPOINT_GetTeamsByCompetitionId =
+        "http://localhost:5285/api/team/GetAllTeamsByCompetitionId?id=" +
+        competitionId;
+    const [TeamData, setTeamData] = React.useState([]);
+
+    useEffect(() => {
+        // function to get data from backend
+        function getDataFromBackend() {
+            fetch(API_ENDPOINT_GetTeamsByCompetitionId, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("Fehler beim Abrufen der Daten");
+                    }
+                })
+                .then((data) => {
+                    Team.TeamId = data.TeamId;
+                    Team.TeamName = data.TeamName;
+                    Team.GamesPlayed = data.GamesPlayed;
+                    Team.GamesWon = data.GamesWon;
+                    Team.GamesDraw = data.GamesDraw;
+                    Team.GamesLost = data.GamesLost;
+                    Team.GoalsScored = data.GoalsScored;
+                    Team.GoalsConceded = data.GoalsConceded;
+                    Team.Points = data.Points;
+                    setTeamData(data);
+                    const sortedData = data.slice(...dataPartition);
+                    setTeamData(sortedData);
+                })
+                .catch((error) => {
+                    console.error("Fehler beim Abrufen der Daten:", error);
+                });
+        }
+
+        getDataFromBackend();
+    }, [dataPartition, API_ENDPOINT_GetTeamsByCompetitionId]);
+
+    const pairings = [];
+    for (let i = 0; i < TeamData.length; i++) {
+        for (let j = i + 1; j < TeamData.length; j++) {
+            pairings.push([i, j]);
+        }
+    }
+
+    console.log("PAIRINGS", pairings, TeamData);
+
     return (
         <>
             <List>
-                <ListItem>Gruppe A</ListItem>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft A1 vs Mannschaft A2
-                </ListItemButton>
+                {pairings.map(([a, b]) => (
+                    <ListItemButton
+                        onClick={() => handleClickOpenDialog(a, b)}
+                        key={`${a}-${b}`}
+                    >
+                        {TeamData[a]?.TeamName + " vs " + TeamData[b]?.TeamName}
+                    </ListItemButton>
+                ))}
                 <MatchDialog
                     selectedValue={selectedValue}
+                    selectedTeams={selectedTeams}
+                    TeamData={TeamData}
                     open={open}
                     onClose={handleCloseDialog}
                 />
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft A1 vs Mannschaft A3
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft A1 vs Mannschaft A4
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft A2 vs Mannschaft A3
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft A2 vs Mannschaft A4
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft A3 vs Mannschaft A4
-                </ListItemButton>
-            </List>
-            <List>
-                <ListItem>Gruppe B</ListItem>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft B1 vs Mannschaft B2
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft B1 vs Mannschaft B3
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft B1 vs Mannschaft B4
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft B2 vs Mannschaft B3
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft B2 vs Mannschaft B4
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft B3 vs Mannschaft B4
-                </ListItemButton>
-            </List>
-            <List>
-                <ListItem>Gruppe C</ListItem>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft C1 vs Mannschaft C2
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft C1 vs Mannschaft C3
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft C1 vs Mannschaft C4
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft C2 vs Mannschaft C3
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft C2 vs Mannschaft C4
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft C3 vs Mannschaft C4
-                </ListItemButton>
-            </List>
-            <List>
-                <ListItem>Gruppe D</ListItem>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft D1 vs Mannschaft D2
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft D1 vs Mannschaft D3
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft D1 vs Mannschaft D4
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft D2 vs Mannschaft D3
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft D2 vs Mannschaft D4
-                </ListItemButton>
-                <ListItemButton onClick={handleClickOpenDialog}>
-                    Mannschaft D3 vs Mannschaft D4
-                </ListItemButton>
             </List>
         </>
     );
 }
+
+GroupMatchList.propTypes = {
+    dataPartition: PropTypes.array.isRequired,
+};

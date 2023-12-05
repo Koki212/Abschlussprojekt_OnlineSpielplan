@@ -1,13 +1,15 @@
+// importing React
 import React from "react";
+// importing react-router-dom
 import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+// importing project components
 import App from "./App.jsx";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NewCompetition from "./NewCompetition.jsx";
 import SearchCompetition from "./SearchCompetition.jsx";
 import Competition from "./Competition.jsx";
 import AddTeams from "./AddTeams.jsx";
-//import AddTeamsCopy from "./AddTeamsCopy.jsx";
 
 const router = createBrowserRouter([
     {

@@ -1,9 +1,14 @@
+// importing basic settings
+import soccerLogo from "/soccer_logo.svg";
+// importing react
+import { useState } from "react";
+// importing react-router-dom
+import { useNavigate } from "react-router-dom";
+// importing components from MUI
 import Button from "@mui/material/Button";
 import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
-import soccerLogo from "/soccer_logo.svg";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// importing project components
 import CompetitionModel from "./components/models/CompetitionModel";
 
 export default function NewCompetition() {
