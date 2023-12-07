@@ -97,7 +97,10 @@ export default function Competition() {
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>Endrunde</Typography>
                 </AccordionSummary>
-                <AccordionDetails>{KoPhaseMatchList()}</AccordionDetails>
+                Viertelfinale
+                <AccordionDetails>
+                    <KoPhaseMatchList />
+                </AccordionDetails>
             </Accordion>
             <Button
                 className="backbuttons"

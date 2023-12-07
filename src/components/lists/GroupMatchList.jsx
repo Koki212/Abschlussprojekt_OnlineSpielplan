@@ -12,7 +12,7 @@ import { MatchDialog } from "../dialogs/MatchDialog";
 import Team from "../models/Team";
 
 export function GroupMatchList(props) {
-    const { dataPartition } = props;
+    const { dataPartition, scoreTeam1, scoreTeam2 } = props;
     const [open, setOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState("");
     const [selectedTeams, setSelectedTeams] = React.useState([]);
@@ -26,6 +26,8 @@ export function GroupMatchList(props) {
         setOpen(false);
         setSelectedValue(value);
     };
+
+    console.log("scoreTeam1: " + scoreTeam1, "scoreTeam2: " + scoreTeam2);
 
     let { competitionId } = useParams();
     // API Endpoint
@@ -89,7 +91,16 @@ export function GroupMatchList(props) {
                         onClick={() => handleClickOpenDialog(a, b)}
                         key={`${a}-${b}`}
                     >
-                        {TeamData[a]?.TeamName + " vs " + TeamData[b]?.TeamName}
+                        {/*TeamData[a]?.TeamName + " vs " + TeamData[b]?.TeamName*/}
+                        {TeamData[a]?.TeamName +
+                            " " +
+                            scoreTeam1 +
+                            " " +
+                            " : " +
+                            " " +
+                            scoreTeam2 +
+                            " " +
+                            TeamData[b]?.TeamName}
                     </ListItemButton>
                 ))}
                 <MatchDialog
@@ -98,6 +109,8 @@ export function GroupMatchList(props) {
                     TeamData={TeamData}
                     open={open}
                     onClose={handleCloseDialog}
+                    scoreTeam1={scoreTeam1}
+                    scoreTeam2={scoreTeam2}
                 />
             </List>
         </>
@@ -106,4 +119,6 @@ export function GroupMatchList(props) {
 
 GroupMatchList.propTypes = {
     dataPartition: PropTypes.array.isRequired,
+    scoreTeam1: PropTypes.number.isRequired,
+    scoreTeam2: PropTypes.number.isRequired,
 };

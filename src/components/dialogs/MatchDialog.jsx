@@ -23,7 +23,7 @@ export function MatchDialog(props) {
     };
 
     const handleClose = () => {
-        onClose(selectedValue);
+        onClose(selectedValue, scoreTeam1, scoreTeam2);
     };
 
     const API_ENDPOINT_CalculatePoints =
