@@ -6,29 +6,34 @@ import { useParams } from "react-router-dom";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 // importing PropTypes from MUI
-//import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 // importing project components
 import { MatchDialog } from "../dialogs/MatchDialog";
 import Team from "../models/Team";
-//import { GroupTable } from "../tables/GroupTable.jsx";
-//import { GroupTable } from "./components/tables/GroupTable.jsx";
 
-export function KoPhaseMatchList(/*props*/) {
-    // const { dataPartition } = props;
+export function KoPhaseMatchList(props) {
+    const { scoreTeam1, scoreTeam2 } = props;
     const [open, setOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState("");
     const [selectedTeams, setSelectedTeams] = React.useState([]);
-    const [scoreTeam1] = React.useState(0);
-    const [scoreTeam2] = React.useState(0);
+    const [matchResults, setMatchResults] = React.useState([]);
 
     const handleClickOpenDialog = (teamA, teamB) => {
         setSelectedTeams([teamA, teamB]);
         setOpen(true);
     };
 
-    const handleCloseDialog = (value) => {
+    const handleCloseDialog = (value, scoreTeam1, scoreTeam2) => {
         setOpen(false);
         setSelectedValue(value);
+        setMatchResults((prevResults) => ({
+            ...prevResults,
+            [`${selectedTeams[0]}-${selectedTeams[1]}`]: `${
+                TeamData[selectedTeams[0]]?.TeamName
+            } ${scoreTeam1} : ${scoreTeam2} ${
+                TeamData[selectedTeams[1]]?.TeamName
+            }`,
+        }));
     };
 
     let { competitionId } = useParams();
@@ -65,8 +70,6 @@ export function KoPhaseMatchList(/*props*/) {
                     Team.GoalsConceded = data.GoalsConceded;
                     Team.Points = data.Points;
                     setTeamData(data);
-                    // const sortedData = data.slice(...dataPartition);
-                    // setTeamData(sortedData);
                 })
                 .catch((error) => {
                     console.error("Fehler beim Abrufen der Daten:", error);
@@ -74,7 +77,7 @@ export function KoPhaseMatchList(/*props*/) {
         }
 
         getDataFromBackend();
-    }, [/*dataPartition,*/ API_ENDPOINT_GetTeamsByCompetitionId]);
+    }, [API_ENDPOINT_GetTeamsByCompetitionId]);
 
     const winnersGroupA = [];
     TeamData.slice(0, 4)
@@ -130,16 +133,8 @@ export function KoPhaseMatchList(/*props*/) {
                         onClick={() => handleClickOpenDialog(a, b)}
                         key={`${a}-${b}`}
                     >
-                        {/*TeamData[a]?.TeamName + " vs " + TeamData[b]?.TeamName*/}
-                        {TeamData[a]?.TeamName +
-                            " " +
-                            scoreTeam1 +
-                            " " +
-                            " : " +
-                            " " +
-                            scoreTeam2 +
-                            " " +
-                            TeamData[b]?.TeamName}
+                        {matchResults[`${a}-${b}`] ||
+                            `${TeamData[a]?.TeamName} vs ${TeamData[b]?.TeamName}`}
                     </ListItemButton>
                 ))}
                 <MatchDialog
@@ -148,12 +143,16 @@ export function KoPhaseMatchList(/*props*/) {
                     TeamData={TeamData}
                     open={open}
                     onClose={handleCloseDialog}
+                    scoreTeam1={scoreTeam1}
+                    scoreTeam2={scoreTeam2}
                 />
             </List>
         </>
     );
 }
 
-// KoPhaseMatchList.propTypes = {
-//     dataPartition: PropTypes.array.isRequired,
-// };
+KoPhaseMatchList.propTypes = {
+    dataPartition: PropTypes.array.isRequired,
+    scoreTeam1: PropTypes.number.isRequired,
+    scoreTeam2: PropTypes.number.isRequired,
+};

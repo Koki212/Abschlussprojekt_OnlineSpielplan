@@ -26,6 +26,11 @@ export function MatchDialog(props) {
         onClose(selectedValue, scoreTeam1, scoreTeam2);
     };
 
+    console.log(
+        "MATCHDIALOG: scoreTeam1: " + scoreTeam1,
+        "scoreTeam2: " + scoreTeam2
+    );
+
     const API_ENDPOINT_CalculatePoints =
         "http://localhost:5285/CalculatePointsObject?team1Id=" +
         TeamData[selectedTeams[0]]?.TeamId +

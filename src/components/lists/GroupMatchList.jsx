@@ -16,18 +16,30 @@ export function GroupMatchList(props) {
     const [open, setOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState("");
     const [selectedTeams, setSelectedTeams] = React.useState([]);
+    const [matchResults, setMatchResults] = React.useState([]);
 
     const handleClickOpenDialog = (teamA, teamB) => {
         setSelectedTeams([teamA, teamB]);
         setOpen(true);
     };
 
-    const handleCloseDialog = (value) => {
+    const handleCloseDialog = (value, scoreTeam1, scoreTeam2) => {
         setOpen(false);
         setSelectedValue(value);
+        setMatchResults((prevResults) => ({
+            ...prevResults,
+            [`${selectedTeams[0]}-${selectedTeams[1]}`]: `${
+                TeamData[selectedTeams[0]]?.TeamName
+            } ${scoreTeam1} : ${scoreTeam2} ${
+                TeamData[selectedTeams[1]]?.TeamName
+            }`,
+        }));
     };
 
-    console.log("scoreTeam1: " + scoreTeam1, "scoreTeam2: " + scoreTeam2);
+    console.log(
+        "GROUPMATCHLIST: scoreTeam1: " + scoreTeam1,
+        "scoreTeam2: " + scoreTeam2
+    );
 
     let { competitionId } = useParams();
     // API Endpoint
@@ -91,16 +103,8 @@ export function GroupMatchList(props) {
                         onClick={() => handleClickOpenDialog(a, b)}
                         key={`${a}-${b}`}
                     >
-                        {/*TeamData[a]?.TeamName + " vs " + TeamData[b]?.TeamName*/}
-                        {TeamData[a]?.TeamName +
-                            " " +
-                            scoreTeam1 +
-                            " " +
-                            " : " +
-                            " " +
-                            scoreTeam2 +
-                            " " +
-                            TeamData[b]?.TeamName}
+                        {matchResults[`${a}-${b}`] ||
+                            `${TeamData[a]?.TeamName} vs ${TeamData[b]?.TeamName}`}
                     </ListItemButton>
                 ))}
                 <MatchDialog
