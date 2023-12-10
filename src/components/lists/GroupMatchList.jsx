@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 // importing components from MUI
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
+import Typography from "@mui/material/Typography";
 // importing PropTypes from MUI
 import PropTypes from "prop-types";
 // importing project components
@@ -35,11 +36,6 @@ export function GroupMatchList(props) {
             }`,
         }));
     };
-
-    console.log(
-        "GROUPMATCHLIST: scoreTeam1: " + scoreTeam1,
-        "scoreTeam2: " + scoreTeam2
-    );
 
     let { competitionId } = useParams();
     // API Endpoint
@@ -102,9 +98,22 @@ export function GroupMatchList(props) {
                     <ListItemButton
                         onClick={() => handleClickOpenDialog(a, b)}
                         key={`${a}-${b}`}
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            backgroundColor: "transparent",
+                            "&:hover": {
+                                backgroundColor: "#FAEBD7",
+                            },
+                        }}
                     >
-                        {matchResults[`${a}-${b}`] ||
-                            `${TeamData[a]?.TeamName} vs ${TeamData[b]?.TeamName}`}
+                        {matchResults[`${a}-${b}`] ? (
+                            <Typography fontWeight="bold">
+                                {matchResults[`${a}-${b}`]}
+                            </Typography>
+                        ) : (
+                            `${TeamData[a]?.TeamName} vs ${TeamData[b]?.TeamName}`
+                        )}
                     </ListItemButton>
                 ))}
                 <MatchDialog

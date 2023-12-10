@@ -44,16 +44,20 @@ export default function Competition() {
                     <Typography>Gruppen</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    Gruppe A<GroupTable dataPartition={[0, 4]} />
+                    <Typography fontWeight="bold">Gruppe A</Typography>
+                    <GroupTable dataPartition={[0, 4]} />
                 </AccordionDetails>
                 <AccordionDetails>
-                    Gruppe B<GroupTable dataPartition={[4, 8]} />
+                    <Typography fontWeight="bold">Gruppe B</Typography>
+                    <GroupTable dataPartition={[4, 8]} />
                 </AccordionDetails>
                 <AccordionDetails>
-                    Gruppe C<GroupTable dataPartition={[8, 12]} />
+                    <Typography fontWeight="bold">Gruppe C</Typography>
+                    <GroupTable dataPartition={[8, 12]} />
                 </AccordionDetails>
                 <AccordionDetails>
-                    Gruppe D<GroupTable dataPartition={[12, 16]} />
+                    <Typography fontWeight="bold">Gruppe D</Typography>
+                    <GroupTable dataPartition={[12, 16]} />
                 </AccordionDetails>
             </Accordion>
             <Accordion
@@ -71,16 +75,20 @@ export default function Competition() {
                     <Typography>Gruppenspiele</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    Gruppe A<GroupMatchList dataPartition={[0, 4]} />
+                    <Typography fontWeight="bold">Gruppe A</Typography>
+                    <GroupMatchList dataPartition={[0, 4]} />
                 </AccordionDetails>
                 <AccordionDetails>
-                    Gruppe B<GroupMatchList dataPartition={[4, 8]} />
+                    <Typography fontWeight="bold">Gruppe B</Typography>
+                    <GroupMatchList dataPartition={[4, 8]} />
                 </AccordionDetails>
                 <AccordionDetails>
-                    Gruppe C<GroupMatchList dataPartition={[8, 12]} />
+                    <Typography fontWeight="bold">Gruppe C</Typography>
+                    <GroupMatchList dataPartition={[8, 12]} />
                 </AccordionDetails>
                 <AccordionDetails>
-                    Gruppe D<GroupMatchList dataPartition={[12, 16]} />
+                    <Typography fontWeight="bold">Gruppe D</Typography>
+                    <GroupMatchList dataPartition={[12, 16]} />
                 </AccordionDetails>
             </Accordion>
             <Accordion
@@ -97,7 +105,6 @@ export default function Competition() {
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>Endrunde</Typography>
                 </AccordionSummary>
-                Viertelfinale
                 <AccordionDetails>
                     <KoPhaseMatchList />
                 </AccordionDetails>

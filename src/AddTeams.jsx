@@ -9,6 +9,11 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { TextField } from "@mui/material";
 import Stack from "@mui/material/Stack";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 // importing project components
 import Team from "./components/models/Team";
 import CompetitionModel from "./components/models/CompetitionModel";
@@ -29,13 +34,24 @@ export default function AddTeams() {
         setTeamsList(list);
     };
 
+    const [openDialog, setOpenDialog] = useState(false);
+    const handleClickOpenDialog = () => {
+        setOpenDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
     const handleAddTeam = () => {
         //if team is added to textfield, increase counter
         if (teamCounter === 16) {
-            return alert(
-                "Es können maximal 16 Mannschaften hinzugefügt werden"
-            );
+            handleClickOpenDialog();
+            return;
         }
+        // return alert(
+        //     "Es können maximal 16 Mannschaften hinzugefügt werden"
+        // );
+
         setTeamsList([
             ...teamsList,
             new Team({
@@ -154,6 +170,24 @@ export default function AddTeams() {
                     weiter
                 </Button>
             </Box>
+            <Dialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"ACHTUNG!"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Es können maximal 16 Mannschaften hinzugefügt werden!
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} autoFocus>
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }

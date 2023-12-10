@@ -1,14 +1,16 @@
 // importing basic settings
 import soccerLogo from "/soccer_logo.svg";
 // importing react
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // importing react-router-dom
 import { useNavigate } from "react-router-dom";
 // importing components from MUI
 import Button from "@mui/material/Button";
-import { List, TextField } from "@mui/material";
+import { List } from "@mui/material";
+import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import ListItemButton from "@mui/material/ListItemButton";
+import { CircularProgress } from "@mui/material";
 // importing project components
 import CompetitionModel from "./components/models/CompetitionModel";
 
@@ -16,6 +18,8 @@ export default function SearchCompetition() {
     const navigate = useNavigate();
     const [allCompetitionList, setAllCompetitionList] = useState([]);
     const [competitionName, setCompetitionName] = useState("");
+    const [loading, setLoading] = useState(false);
+
     const changeInput = (event) => {
         setCompetitionName(event.target.value);
     };
@@ -27,28 +31,34 @@ export default function SearchCompetition() {
     const API_ENDPOINT_GetAllCompetitions =
         "http://localhost:5285/api/competition/GetAllCompetitions";
 
-    function getAllCompetitions() {
-        fetch(API_ENDPOINT_GetAllCompetitions, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then((response) => {
+    useEffect(() => {
+        // Funktion, um alle Wettbewerbe abzurufen
+        const getAllCompetitions = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch(API_ENDPOINT_GetAllCompetitions, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
                 if (response.ok) {
-                    return response.json();
+                    const data = await response.json();
+                    CompetitionModel.CompetitionId = data.CompetitionId;
+                    CompetitionModel.CompetitionName = data.Name;
+                    setAllCompetitionList(data);
                 } else {
                     throw new Error("Fehler beim Abrufen der Daten");
                 }
-            })
-            .then((data) => {
-                setAllCompetitionList(data);
-            })
-            .catch((error) => {
-                console.log("Fehler beim Abrufen der Daten: " + error);
-            });
-    }
-    getAllCompetitions();
+            } catch (error) {
+                console.error("Fehler beim Abrufen der Daten:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getAllCompetitions();
+    }, [API_ENDPOINT_GetAllCompetitions]);
 
     return (
         <>
@@ -60,6 +70,8 @@ export default function SearchCompetition() {
             <h2>Turnier suchen</h2>
             <Box
                 sx={{
+                    display: "flex",
+                    alignItems: "center",
                     width: 700,
                     maxWidth: "100%",
                     "& button": { m: 1 },
@@ -69,6 +81,7 @@ export default function SearchCompetition() {
                     fullWidth
                     margin="normal"
                     id="fullWidth"
+                    size="small"
                     label="Bitte geben Sie den Namen des Turniers ein"
                     // save the value of the input field
                     onChange={changeInput}
@@ -78,43 +91,60 @@ export default function SearchCompetition() {
                     className="nextbuttons"
                     variant="contained"
                     onClick={async () => {
-                        console.log(competitionName);
-                        await fetch(API_ENDPOINT_GetCompetitonByName, {
-                            method: "GET",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                        })
-                            .then((response) => response.json())
-                            .then((data) => {
+                        try {
+                            setLoading(true);
+                            const response = await fetch(
+                                API_ENDPOINT_GetCompetitonByName,
+                                {
+                                    method: "GET",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                }
+                            );
+                            if (response.ok) {
+                                const data = await response.json();
                                 CompetitionModel.CompetitionId =
                                     data.CompetitionId;
                                 CompetitionModel.CompetitionName = data.Name;
-                                console.log(data);
-                            });
-                        navigate(
-                            "/competition/" + CompetitionModel.CompetitionId
-                        );
+                                navigate(
+                                    "/competition/" +
+                                        CompetitionModel.CompetitionId
+                                );
+                            } else {
+                                throw new Error(
+                                    "Fehler beim Abrufen der Daten"
+                                );
+                            }
+                        } catch (error) {
+                            console.error(
+                                "Fehler beim Abrufen der Daten:",
+                                error
+                            );
+                        } finally {
+                            setLoading(false);
+                        }
                     }}
                 >
                     suchen
                 </Button>
-                <List>
-                    {allCompetitionList.map((singleCompetition, index) => (
-                        <ListItemButton
-                            onClick={() => {
-                                navigate(
-                                    "/competition/" +
-                                        singleCompetition.CompetitionId
-                                );
-                            }}
-                            key={index}
-                        >
-                            {singleCompetition.Name}
-                        </ListItemButton>
-                    ))}
-                </List>
             </Box>
+            <List>
+                {loading && <CircularProgress />}
+                {allCompetitionList.map((singleCompetition, index) => (
+                    <ListItemButton
+                        onClick={() => {
+                            navigate(
+                                "/competition/" +
+                                    singleCompetition.CompetitionId
+                            );
+                        }}
+                        key={index}
+                    >
+                        {singleCompetition.Name}
+                    </ListItemButton>
+                ))}
+            </List>
             <div className="card">
                 <Button
                     className="backbuttons"

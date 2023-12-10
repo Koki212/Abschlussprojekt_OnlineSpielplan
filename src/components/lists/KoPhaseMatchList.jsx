@@ -5,10 +5,11 @@ import { useParams } from "react-router-dom";
 // importing components from MUI
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
+import Typography from "@mui/material/Typography";
 // importing PropTypes from MUI
 import PropTypes from "prop-types";
 // importing project components
-import { MatchDialog } from "../dialogs/MatchDialog";
+import { KoPhaseMatchDialog } from "../dialogs/KoPhaseMatchDialog";
 import Team from "../models/Team";
 
 export function KoPhaseMatchList(props) {
@@ -17,31 +18,15 @@ export function KoPhaseMatchList(props) {
     const [selectedValue, setSelectedValue] = React.useState("");
     const [selectedTeams, setSelectedTeams] = React.useState([]);
     const [matchResults, setMatchResults] = React.useState([]);
-
-    const handleClickOpenDialog = (teamA, teamB) => {
-        setSelectedTeams([teamA, teamB]);
-        setOpen(true);
-    };
-
-    const handleCloseDialog = (value, scoreTeam1, scoreTeam2) => {
-        setOpen(false);
-        setSelectedValue(value);
-        setMatchResults((prevResults) => ({
-            ...prevResults,
-            [`${selectedTeams[0]}-${selectedTeams[1]}`]: `${
-                TeamData[selectedTeams[0]]?.TeamName
-            } ${scoreTeam1} : ${scoreTeam2} ${
-                TeamData[selectedTeams[1]]?.TeamName
-            }`,
-        }));
-    };
+    const [pairingsSemiFinals, setPairingsSemiFinals] = React.useState([]);
+    const [pairingsFinal, setPairingsFinal] = React.useState([]);
+    const [TeamData, setTeamData] = React.useState([]);
 
     let { competitionId } = useParams();
     // API Endpoint
     const API_ENDPOINT_GetTeamsByCompetitionId =
         "http://localhost:5285/api/team/GetAllTeamsByCompetitionId?id=" +
         competitionId;
-    const [TeamData, setTeamData] = React.useState([]);
 
     useEffect(() => {
         // function to get data from backend
@@ -79,74 +64,193 @@ export function KoPhaseMatchList(props) {
         getDataFromBackend();
     }, [API_ENDPOINT_GetTeamsByCompetitionId]);
 
-    const winnersGroupA = [];
+    console.log("TEAMDATA", TeamData);
+
+    const groupA = [];
     TeamData.slice(0, 4)
         .sort((a, b) => b.Points - a.Points)
         .forEach((element) => {
-            winnersGroupA.push(TeamData.indexOf(element));
+            groupA.push(TeamData.indexOf(element));
         });
-    const winnersGroupB = [];
+    const groupB = [];
     TeamData.slice(4, 8)
         .sort((a, b) => b.Points - a.Points)
         .forEach((element) => {
-            winnersGroupB.push(TeamData.indexOf(element));
+            groupB.push(TeamData.indexOf(element));
         });
-    const winnersGroupC = [];
+    const groupC = [];
     TeamData.slice(8, 12)
         .sort((a, b) => b.Points - a.Points)
         .forEach((element) => {
-            winnersGroupC.push(TeamData.indexOf(element));
+            groupC.push(TeamData.indexOf(element));
         });
-    const winnersGroupD = [];
+    const groupD = [];
     TeamData.slice(12, 16)
         .sort((a, b) => b.Points - a.Points)
         .forEach((element) => {
-            winnersGroupD.push(TeamData.indexOf(element));
+            groupD.push(TeamData.indexOf(element));
         });
 
-    console.log(
-        "WINNERS",
-        winnersGroupA,
-        winnersGroupB,
-        winnersGroupC,
-        winnersGroupD
-    );
+    console.log("GROUPS: ", groupA, groupB, groupC, groupD);
 
     const pairingsQuarterFinals = [
         //first of group A vs second of group B
-        [winnersGroupA[0], winnersGroupB[1]],
+        [groupA[0], groupB[1]],
         //first of group B vs second of group A
-        [winnersGroupB[0], winnersGroupA[1]],
+        [groupB[0], groupA[1]],
         //first of group C vs second of group D
-        [winnersGroupC[0], winnersGroupD[1]],
+        [groupC[0], groupD[1]],
         //first of group D vs second of group C
-        [winnersGroupD[0], winnersGroupC[1]],
+        [groupD[0], groupC[1]],
     ];
 
-    console.log("PAIRINGS", pairingsQuarterFinals, TeamData);
+    const handleClickOpenDialog = (teamA, teamB) => {
+        setSelectedTeams([teamA, teamB]);
+        setOpen(true);
+    };
+
+    const handleCloseDialog = (value, scoreTeam1, scoreTeam2) => {
+        setOpen(false);
+        setSelectedValue(value);
+
+        console.log("Selected Teams:", selectedTeams);
+
+        setMatchResults((prevResults) => ({
+            ...prevResults,
+            [`${selectedTeams[0]}-${selectedTeams[1]}`]: `${
+                TeamData[selectedTeams[0]]?.TeamName
+            } ${scoreTeam1} : ${scoreTeam2} ${
+                TeamData[selectedTeams[1]]?.TeamName
+            }`,
+        }));
+        // check if all quarter finals are played
+        const allQuarterFinalsPlayed = pairingsQuarterFinals.every(
+            ([a, b]) => matchResults[`${a}-${b}`]
+        );
+        // if all quarter finals are played, calculate the results of the semi finals
+        if (allQuarterFinalsPlayed) {
+            handleQuarterFinalsResults();
+        }
+    };
+
+    const handleWinner = (teamA, teamB, scoreTeam1, scoreTeam2) => {
+        if (scoreTeam1 > scoreTeam2) {
+            return teamA;
+        } else {
+            return teamB;
+        }
+    };
+
+    // function to calculate the results of the quarter finals
+    const handleQuarterFinalsResults = () => {
+        const resultsSemiFinals = pairingsQuarterFinals.map(([a, b]) => {
+            const winner = handleWinner(
+                a,
+                b,
+                parseInt(matchResults[`${a}-${b}`].split(":")[0]),
+                parseInt(matchResults[`${a}-${b}`].split(":")[1])
+            );
+            return winner;
+        });
+        console.log("resultsSemiFinals", resultsSemiFinals);
+        setPairingsSemiFinals([
+            [resultsSemiFinals[0], resultsSemiFinals[1]],
+            [resultsSemiFinals[2], resultsSemiFinals[3]],
+        ]);
+    };
+
+    console.log("pairingsQuarterFinals", pairingsQuarterFinals);
+    console.log("matchResults", matchResults);
+    console.log("pairingsSemiFinals", pairingsSemiFinals);
+    console.log("pairingsFinal", pairingsFinal);
 
     return (
         <>
+            <div style={{ fontWeight: "bold" }}>Viertelfinale</div>
             <List>
-                {pairingsQuarterFinals.map(([a, b]) => (
+                {TeamData.length === 16 &&
+                    pairingsQuarterFinals.map(([a, b]) => (
+                        <ListItemButton
+                            onClick={() => handleClickOpenDialog(a, b)}
+                            key={`${a}-${b}`}
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                backgroundColor: "transparent",
+                                "&:hover": {
+                                    backgroundColor: "#FAEBD7",
+                                },
+                            }}
+                        >
+                            {matchResults[`${a}-${b}`] ? (
+                                <Typography fontWeight="bold">
+                                    {matchResults[`${a}-${b}`]}
+                                </Typography>
+                            ) : (
+                                `${TeamData[a]?.TeamName} vs ${TeamData[b]?.TeamName}`
+                            )}
+                        </ListItemButton>
+                    ))}
+            </List>
+            <div style={{ fontWeight: "bold" }}>Halbfinale</div>
+            <List>
+                {pairingsSemiFinals.map(([a, b]) => (
                     <ListItemButton
                         onClick={() => handleClickOpenDialog(a, b)}
                         key={`${a}-${b}`}
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            backgroundColor: "transparent",
+                            "&:hover": {
+                                backgroundColor: "#FAEBD7",
+                            },
+                        }}
                     >
-                        {matchResults[`${a}-${b}`] ||
-                            `${TeamData[a]?.TeamName} vs ${TeamData[b]?.TeamName}`}
+                        {matchResults[`${a}-${b}`] ? (
+                            <Typography fontWeight="bold">
+                                {matchResults[`${a}-${b}`]}
+                            </Typography>
+                        ) : (
+                            `${TeamData[a]?.TeamName} vs ${TeamData[b]?.TeamName}`
+                        )}
                     </ListItemButton>
                 ))}
-                <MatchDialog
-                    selectedValue={selectedValue}
-                    selectedTeams={selectedTeams}
-                    TeamData={TeamData}
-                    open={open}
-                    onClose={handleCloseDialog}
-                    scoreTeam1={scoreTeam1}
-                    scoreTeam2={scoreTeam2}
-                />
             </List>
+            <div style={{ fontWeight: "bold" }}>Finale</div>
+            <List>
+                {pairingsFinal.map(([a, b]) => (
+                    <ListItemButton
+                        onClick={() => handleClickOpenDialog(a, b)}
+                        key={`${a}-${b}`}
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            backgroundColor: "transparent",
+                            "&:hover": {
+                                backgroundColor: "#FAEBD7",
+                            },
+                        }}
+                    >
+                        {matchResults[`${a}-${b}`] ? (
+                            <Typography fontWeight="bold">
+                                {matchResults[`${a}-${b}`]}
+                            </Typography>
+                        ) : (
+                            `${TeamData[a]?.TeamName} vs ${TeamData[b]?.TeamName}`
+                        )}
+                    </ListItemButton>
+                ))}
+            </List>
+            <KoPhaseMatchDialog
+                selectedValue={selectedValue}
+                selectedTeams={selectedTeams}
+                TeamData={TeamData}
+                open={open}
+                onClose={handleCloseDialog}
+                scoreTeam1={scoreTeam1}
+                scoreTeam2={scoreTeam2}
+            />
         </>
     );
 }

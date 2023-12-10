@@ -94,6 +94,7 @@ export default function NewCompetition() {
                 <Button
                     className="backbuttons"
                     variant="outlined"
+                    href="/"
                     onClick={async () => {
                         await fetch("http://localhost:5173/");
                     }}

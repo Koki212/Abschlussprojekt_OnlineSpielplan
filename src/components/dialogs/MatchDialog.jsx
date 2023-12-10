@@ -15,11 +15,13 @@ export function MatchDialog(props) {
     const [scoreTeam2, setScoreTeam2] = React.useState(0);
 
     const changeInputScoreTeam1 = (event) => {
-        setScoreTeam1(event.target.value);
+        const value = parseInt(event.target.value);
+        setScoreTeam1(isNaN(value) ? 0 : Math.max(0, value));
     };
 
     const changeInputScoreTeam2 = (event) => {
-        setScoreTeam2(event.target.value);
+        const value = parseInt(event.target.value);
+        setScoreTeam2(isNaN(value) ? 0 : Math.max(0, value));
     };
 
     const handleClose = () => {
@@ -42,9 +44,15 @@ export function MatchDialog(props) {
         scoreTeam2;
 
     return (
-        <Dialog onClose={handleClose} open={open}>
+        <Dialog onClose={handleClose} open={open} maxWidth="xl">
             <DialogTitle>Match</DialogTitle>
-            <Stack direction={"row"} spacing={2} margin={5}>
+            <Stack
+                direction={"row"}
+                spacing={2}
+                margin={5}
+                justifyContent="center"
+                alignItems="center"
+            >
                 <h3>{TeamData[selectedTeams[0]]?.TeamName}</h3>
                 <TextField
                     id="outlined-number"

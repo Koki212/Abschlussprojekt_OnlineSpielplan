@@ -87,44 +87,104 @@ export function GroupTable(props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {TeamData.map((team) => (
-                            <TableRow
-                                key={team.TeamName}
-                                sx={{
-                                    "&:last-child td, &:last-child th": {
-                                        border: 0,
-                                    },
-                                }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {team.TeamName}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {team.GamesPlayed}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {team.GamesWon}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {team.GamesDraw}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {team.GamesLost}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {team.GoalsScored}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {team.GoalsConceded}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {team.GoalsScored - team.GoalsConceded}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {team.Points}
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                        {TeamData.map((team, index) => {
+                            const isQualified = index === 0 || index === 1;
+                            if (
+                                TeamData.every(
+                                    (team) => team.GamesPlayed >= 3
+                                ) &&
+                                isQualified
+                            ) {
+                                return (
+                                    <TableRow
+                                        key={team.TeamName}
+                                        sx={{
+                                            "&:last-child td, &:last-child th":
+                                                {
+                                                    border: 0,
+                                                },
+                                            backgroundColor: "#c8e6c9",
+                                            "&:hover": {
+                                                backgroundColor: "#FAEBD7",
+                                            },
+                                        }}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {team.TeamName}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.GamesPlayed}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.GamesWon}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.GamesDraw}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.GamesLost}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.GoalsScored}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.GoalsConceded}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.GoalsScored -
+                                                team.GoalsConceded}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.Points}
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            } else {
+                                return (
+                                    <TableRow
+                                        key={team.TeamName}
+                                        sx={{
+                                            "&:last-child td, &:last-child th":
+                                                {
+                                                    border: 0,
+                                                },
+                                            "&:hover": {
+                                                backgroundColor: "#FAEBD7",
+                                            },
+                                        }}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {team.TeamName}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.GamesPlayed}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.GamesWon}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.GamesDraw}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.GamesLost}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.GoalsScored}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.GoalsConceded}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.GoalsScored -
+                                                team.GoalsConceded}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {team.Points}
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            }
+                        })}
                     </TableBody>
                 </Table>
             </TableContainer>
