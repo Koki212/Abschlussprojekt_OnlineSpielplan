@@ -1,5 +1,5 @@
 // importing React
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 // importing react-router-dom
 import { useParams } from "react-router-dom";
 // importing components from MUI
@@ -14,10 +14,10 @@ import Team from "../models/Team";
 
 export function GroupMatchList(props) {
     const { dataPartition, scoreTeam1, scoreTeam2 } = props;
-    const [open, setOpen] = React.useState(false);
-    const [selectedValue, setSelectedValue] = React.useState("");
-    const [selectedTeams, setSelectedTeams] = React.useState([]);
-    const [matchResults, setMatchResults] = React.useState([]);
+    const [open, setOpen] = useState(false);
+    const [selectedValue, setSelectedValue] = useState("");
+    const [selectedTeams, setSelectedTeams] = useState([]);
+    const [matchResults, setMatchResults] = useState([]);
 
     const handleClickOpenDialog = (teamA, teamB) => {
         setSelectedTeams([teamA, teamB]);
@@ -42,7 +42,7 @@ export function GroupMatchList(props) {
     const API_ENDPOINT_GetTeamsByCompetitionId =
         "http://localhost:5285/api/team/GetAllTeamsByCompetitionId?id=" +
         competitionId;
-    const [TeamData, setTeamData] = React.useState([]);
+    const [TeamData, setTeamData] = useState([]);
 
     useEffect(() => {
         // function to get data from backend

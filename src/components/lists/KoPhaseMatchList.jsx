@@ -1,5 +1,5 @@
 // importing React
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 // importing react-router-dom
 import { useParams } from "react-router-dom";
 // importing components from MUI
@@ -14,13 +14,13 @@ import Team from "../models/Team";
 
 export function KoPhaseMatchList(props) {
     const { scoreTeam1, scoreTeam2, penaltyTeam1, penaltyTeam2 } = props;
-    const [open, setOpen] = React.useState(false);
-    const [selectedValue, setSelectedValue] = React.useState("");
-    const [selectedTeams, setSelectedTeams] = React.useState([]);
-    const [matchResults, setMatchResults] = React.useState([]);
-    const [pairingsSemiFinals, setPairingsSemiFinals] = React.useState([]);
-    const [pairingsFinal, setPairingsFinal] = React.useState([]);
-    const [TeamData, setTeamData] = React.useState([]);
+    const [open, setOpen] = useState(false);
+    const [selectedValue, setSelectedValue] = useState("");
+    const [selectedTeams, setSelectedTeams] = useState([]);
+    const [matchResults, setMatchResults] = useState([]);
+    const [pairingsSemiFinals, setPairingsSemiFinals] = useState([]);
+    const [pairingsFinal, setPairingsFinal] = useState([]);
+    const [TeamData, setTeamData] = useState([]);
 
     let { competitionId } = useParams();
     // API Endpoint

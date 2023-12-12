@@ -1,5 +1,5 @@
 // importing React
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 //importing react-router-dom
 import { useParams } from "react-router-dom";
 // importing project components
@@ -24,7 +24,7 @@ export function GroupTable(props) {
         "http://localhost:5285/api/team/GetAllTeamsByCompetitionId?id=" +
         competitionId;
     console.log("CompetitionID = " + CompetitionModel.CompetitionId);
-    const [TeamData, setTeamData] = React.useState([]);
+    const [TeamData, setTeamData] = useState([]);
 
     useEffect(() => {
         // function to get data from backend

@@ -7,12 +7,12 @@ import Stack from "@mui/material/Stack";
 // importing PropTypes from MUI
 import PropTypes from "prop-types";
 // importing React
-import React from "react";
+import { useState } from "react";
 
 export function MatchDialog(props) {
     const { onClose, selectedValue, open, selectedTeams, TeamData } = props;
-    const [scoreTeam1, setScoreTeam1] = React.useState(0);
-    const [scoreTeam2, setScoreTeam2] = React.useState(0);
+    const [scoreTeam1, setScoreTeam1] = useState(0);
+    const [scoreTeam2, setScoreTeam2] = useState(0);
 
     const changeInputScoreTeam1 = (event) => {
         const value = parseInt(event.target.value);

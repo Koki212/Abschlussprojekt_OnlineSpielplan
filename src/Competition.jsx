@@ -1,7 +1,9 @@
 // importing basic settings
 import soccerLogo from "/soccer_logo.svg";
 // importing react
-import * as React from "react";
+import { useState, useEffect } from "react";
+// importing react-router-dom
+import { useParams } from "react-router-dom";
 // importing components from MUI
 import Button from "@mui/material/Button";
 import { Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
@@ -9,17 +11,52 @@ import { Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 // importing project components
 import CompetitionModel from "./components/models/CompetitionModel";
+// import Team from ".components/models/Team";
 import { GroupMatchList } from "./components/lists/GroupMatchList.jsx";
 import { KoPhaseMatchList } from "./components/lists/KoPhaseMatchList.jsx";
 import { GroupTable } from "./components/tables/GroupTable.jsx";
 
 export default function Competition() {
-    const competitionName = CompetitionModel.CompetitionName;
-    const [expanded, setExpanded] = React.useState(false);
+    const [expanded, setExpanded] = useState(false);
+
+    let { competitionId } = useParams();
+
+    const API_ENDPOINT_GetCompetitionById =
+        "http://localhost:5285/api/competition/GetCompetitionById?id=" +
+        competitionId;
+    const [competitionData, setCompetitionData] = useState([]);
 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
+
+    useEffect(() => {
+        // function to get Competitiondata from backend
+        function getCompetitionDataFromBackend() {
+            fetch(API_ENDPOINT_GetCompetitionById, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("Fehler beim Abrufen der Daten");
+                    }
+                })
+                .then((data) => {
+                    CompetitionModel.CompetitionId = data.CompetitionId;
+                    CompetitionModel.CompetitionName = data.Name;
+                    setCompetitionData(data);
+                })
+                .catch((error) => {
+                    console.error("Fehler beim Abrufen der Daten:", error);
+                });
+        }
+        getCompetitionDataFromBackend();
+    }, [setCompetitionData, API_ENDPOINT_GetCompetitionById]);
 
     return (
         <>
@@ -28,7 +65,7 @@ export default function Competition() {
                     <img src={soccerLogo} className="logo" alt="Soccer logo" />
                 </a>
             </div>
-            <h1>{competitionName}</h1>
+            <h1>{CompetitionModel.CompetitionName}</h1>
             <Accordion
                 sx={{
                     width: "100%",
