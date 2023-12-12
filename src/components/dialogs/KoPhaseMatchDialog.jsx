@@ -46,43 +46,6 @@ export function KoPhaseMatchDialog(props) {
         "scoreTeam2: " + scoreTeam2
     );
 
-    // const renderPenaltyShootout = () => {
-    //     return (
-    //         <>
-    //             <h3>Elfmeterschießen</h3>
-    //             <Stack direction={"row"} spacing={2} margin={5}>
-    //                 <TextField
-    //                     id="outlined-number"
-    //                     label={`Elfmeter ${
-    //                         TeamData[selectedTeams[0]]?.TeamName
-    //                     }`}
-    //                     type="number"
-    //                     size="small"
-    //                     onChange={changeInputPenaltyTeam1}
-    //                     value={penaltyTeam1}
-    //                     InputLabelProps={{
-    //                         shrink: true,
-    //                     }}
-    //                 />
-    //                 <h2>:</h2>
-    //                 <TextField
-    //                     id="outlined-number"
-    //                     label={`Elfmeter ${
-    //                         TeamData[selectedTeams[1]]?.TeamName
-    //                     }`}
-    //                     type="number"
-    //                     size="small"
-    //                     onChange={changeInputPenaltyTeam2}
-    //                     value={penaltyTeam2}
-    //                     InputLabelProps={{
-    //                         shrink: true,
-    //                     }}
-    //                 />
-    //             </Stack>
-    //         </>
-    //     );
-    // };
-
     const renderPenaltyShootout = () => {
         return (
             <>

@@ -44,19 +44,27 @@ export default function Competition() {
                     <Typography>Gruppen</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Typography fontWeight="bold">Gruppe A</Typography>
+                    <Typography fontWeight="bold" fontSize={25}>
+                        Gruppe A
+                    </Typography>
                     <GroupTable dataPartition={[0, 4]} />
                 </AccordionDetails>
                 <AccordionDetails>
-                    <Typography fontWeight="bold">Gruppe B</Typography>
+                    <Typography fontWeight="bold" fontSize={25}>
+                        Gruppe B
+                    </Typography>
                     <GroupTable dataPartition={[4, 8]} />
                 </AccordionDetails>
                 <AccordionDetails>
-                    <Typography fontWeight="bold">Gruppe C</Typography>
+                    <Typography fontWeight="bold" fontSize={25}>
+                        Gruppe C
+                    </Typography>
                     <GroupTable dataPartition={[8, 12]} />
                 </AccordionDetails>
                 <AccordionDetails>
-                    <Typography fontWeight="bold">Gruppe D</Typography>
+                    <Typography fontWeight="bold" fontSize={25}>
+                        Gruppe D
+                    </Typography>
                     <GroupTable dataPartition={[12, 16]} />
                 </AccordionDetails>
             </Accordion>
@@ -75,19 +83,27 @@ export default function Competition() {
                     <Typography>Gruppenspiele</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Typography fontWeight="bold">Gruppe A</Typography>
+                    <Typography fontWeight="bold" fontSize={25}>
+                        Gruppe A
+                    </Typography>
                     <GroupMatchList dataPartition={[0, 4]} />
                 </AccordionDetails>
                 <AccordionDetails>
-                    <Typography fontWeight="bold">Gruppe B</Typography>
+                    <Typography fontWeight="bold" fontSize={25}>
+                        Gruppe B
+                    </Typography>
                     <GroupMatchList dataPartition={[4, 8]} />
                 </AccordionDetails>
                 <AccordionDetails>
-                    <Typography fontWeight="bold">Gruppe C</Typography>
+                    <Typography fontWeight="bold" fontSize={25}>
+                        Gruppe C
+                    </Typography>
                     <GroupMatchList dataPartition={[8, 12]} />
                 </AccordionDetails>
                 <AccordionDetails>
-                    <Typography fontWeight="bold">Gruppe D</Typography>
+                    <Typography fontWeight="bold" fontSize={25}>
+                        Gruppe D
+                    </Typography>
                     <GroupMatchList dataPartition={[12, 16]} />
                 </AccordionDetails>
             </Accordion>

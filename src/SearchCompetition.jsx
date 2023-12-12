@@ -134,6 +134,10 @@ export default function SearchCompetition() {
                 {allCompetitionList.map((singleCompetition, index) => (
                     <ListItemButton
                         onClick={() => {
+                            CompetitionModel.CompetitionName =
+                                singleCompetition.Name;
+                            CompetitionModel.CompetitionId =
+                                singleCompetition.CompetitionId;
                             navigate(
                                 "/competition/" +
                                     singleCompetition.CompetitionId

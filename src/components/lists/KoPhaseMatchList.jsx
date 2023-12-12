@@ -13,7 +13,7 @@ import { KoPhaseMatchDialog } from "../dialogs/KoPhaseMatchDialog";
 import Team from "../models/Team";
 
 export function KoPhaseMatchList(props) {
-    const { scoreTeam1, scoreTeam2 } = props;
+    const { scoreTeam1, scoreTeam2, penaltyTeam1, penaltyTeam2 } = props;
     const [open, setOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState("");
     const [selectedTeams, setSelectedTeams] = React.useState([]);
@@ -117,12 +117,9 @@ export function KoPhaseMatchList(props) {
 
         setMatchResults((prevResults) => ({
             ...prevResults,
-            [`${selectedTeams[0]}-${selectedTeams[1]}`]: `${
-                TeamData[selectedTeams[0]]?.TeamName
-            } ${scoreTeam1} : ${scoreTeam2} ${
-                TeamData[selectedTeams[1]]?.TeamName
-            }`,
+            [`${selectedTeams[0]}-${selectedTeams[1]}`]: `${scoreTeam1} : ${scoreTeam2}`,
         }));
+
         // check if all quarter finals are played
         const allQuarterFinalsPlayed = pairingsQuarterFinals.every(
             ([a, b]) => matchResults[`${a}-${b}`]
@@ -131,10 +128,39 @@ export function KoPhaseMatchList(props) {
         if (allQuarterFinalsPlayed) {
             handleQuarterFinalsResults();
         }
+
+        const allSemiFinalsPlayed = pairingsSemiFinals.every(
+            ([a, b]) => matchResults[`${a}-${b}`]
+        );
+        // if all semi finals are played, calculate the results of the final
+        if (allSemiFinalsPlayed) {
+            handleSemiFinalsResults();
+        }
+
+        const allFinalsPlayed = pairingsFinal.every(
+            ([a, b]) => matchResults[`${a}-${b}`]
+        );
+        // if all finals are played, calculate the results of the final
+        if (allFinalsPlayed) {
+            handleFinalResults();
+        }
     };
 
-    const handleWinner = (teamA, teamB, scoreTeam1, scoreTeam2) => {
-        if (scoreTeam1 > scoreTeam2) {
+    const handleWinner = (
+        teamA,
+        teamB,
+        scoreTeam1,
+        scoreTeam2,
+        penaltyTeam1,
+        penaltyTeam2
+    ) => {
+        if (scoreTeam1 === scoreTeam2) {
+            if (penaltyTeam1 > penaltyTeam2) {
+                return teamA;
+            } else {
+                return teamB;
+            }
+        } else if (scoreTeam1 > scoreTeam2) {
             return teamA;
         } else {
             return teamB;
@@ -159,14 +185,45 @@ export function KoPhaseMatchList(props) {
         ]);
     };
 
+    // function to calculate the results of the semi finals
+    const handleSemiFinalsResults = () => {
+        const resultsFinal = pairingsSemiFinals.map(([a, b]) => {
+            const winner = handleWinner(
+                a,
+                b,
+                parseInt(matchResults[`${a}-${b}`].split(":")[0]),
+                parseInt(matchResults[`${a}-${b}`].split(":")[1])
+            );
+            return winner;
+        });
+        console.log("resultsFinal", resultsFinal);
+        setPairingsFinal([[resultsFinal[0], resultsFinal[1]]]);
+    };
+
+    // function to calculate the results of the final
+    const handleFinalResults = () => {
+        const resultsOfFinalGame = pairingsFinal.map(([a, b]) => {
+            const winner = handleWinner(
+                a,
+                b,
+                parseInt(matchResults[`${a}-${b}`].split(":")[0]),
+                parseInt(matchResults[`${a}-${b}`].split(":")[1])
+            );
+            return winner;
+        });
+        console.log("resultsFinal", resultsOfFinalGame);
+    };
+
     console.log("pairingsQuarterFinals", pairingsQuarterFinals);
     console.log("matchResults", matchResults);
-    console.log("pairingsSemiFinals", pairingsSemiFinals);
+    console.log("pairingsSemiFinals", pairingsSemiFinals, TeamData);
     console.log("pairingsFinal", pairingsFinal);
 
     return (
         <>
-            <div style={{ fontWeight: "bold" }}>Viertelfinale</div>
+            <div style={{ fontWeight: "bold", fontSize: 25 }}>
+                Viertelfinale
+            </div>
             <List>
                 {TeamData.length === 16 &&
                     pairingsQuarterFinals.map(([a, b]) => (
@@ -184,7 +241,9 @@ export function KoPhaseMatchList(props) {
                         >
                             {matchResults[`${a}-${b}`] ? (
                                 <Typography fontWeight="bold">
-                                    {matchResults[`${a}-${b}`]}
+                                    {`${TeamData[a]?.TeamName} ${
+                                        matchResults[`${a}-${b}`]
+                                    } ${TeamData[b]?.TeamName}`}
                                 </Typography>
                             ) : (
                                 `${TeamData[a]?.TeamName} vs ${TeamData[b]?.TeamName}`
@@ -192,7 +251,7 @@ export function KoPhaseMatchList(props) {
                         </ListItemButton>
                     ))}
             </List>
-            <div style={{ fontWeight: "bold" }}>Halbfinale</div>
+            <div style={{ fontWeight: "bold", fontSize: 25 }}>Halbfinale</div>
             <List>
                 {pairingsSemiFinals.map(([a, b]) => (
                     <ListItemButton
@@ -209,7 +268,9 @@ export function KoPhaseMatchList(props) {
                     >
                         {matchResults[`${a}-${b}`] ? (
                             <Typography fontWeight="bold">
-                                {matchResults[`${a}-${b}`]}
+                                {`${TeamData[a]?.TeamName} ${
+                                    matchResults[`${a}-${b}`]
+                                } ${TeamData[b]?.TeamName}`}
                             </Typography>
                         ) : (
                             `${TeamData[a]?.TeamName} vs ${TeamData[b]?.TeamName}`
@@ -217,7 +278,7 @@ export function KoPhaseMatchList(props) {
                     </ListItemButton>
                 ))}
             </List>
-            <div style={{ fontWeight: "bold" }}>Finale</div>
+            <div style={{ fontWeight: "bold", fontSize: 25 }}>Finale</div>
             <List>
                 {pairingsFinal.map(([a, b]) => (
                     <ListItemButton
@@ -234,7 +295,9 @@ export function KoPhaseMatchList(props) {
                     >
                         {matchResults[`${a}-${b}`] ? (
                             <Typography fontWeight="bold">
-                                {matchResults[`${a}-${b}`]}
+                                {`${TeamData[a]?.TeamName} ${
+                                    matchResults[`${a}-${b}`]
+                                } ${TeamData[b]?.TeamName}`}
                             </Typography>
                         ) : (
                             `${TeamData[a]?.TeamName} vs ${TeamData[b]?.TeamName}`
@@ -250,6 +313,8 @@ export function KoPhaseMatchList(props) {
                 onClose={handleCloseDialog}
                 scoreTeam1={scoreTeam1}
                 scoreTeam2={scoreTeam2}
+                penaltyTeam1={penaltyTeam1}
+                penaltyTeam2={penaltyTeam2}
             />
         </>
     );
@@ -259,4 +324,6 @@ KoPhaseMatchList.propTypes = {
     dataPartition: PropTypes.array.isRequired,
     scoreTeam1: PropTypes.number.isRequired,
     scoreTeam2: PropTypes.number.isRequired,
+    penaltyTeam1: PropTypes.number.isRequired,
+    penaltyTeam2: PropTypes.number.isRequired,
 };
