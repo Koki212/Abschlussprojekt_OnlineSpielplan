@@ -30,6 +30,8 @@ export default function Competition() {
         setExpanded(isExpanded ? panel : false);
     };
 
+    console.log("CompetitionData: ", competitionData);
+
     useEffect(() => {
         // function to get Competitiondata from backend
         function getCompetitionDataFromBackend() {

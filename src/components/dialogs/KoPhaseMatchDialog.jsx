@@ -126,14 +126,30 @@ export function KoPhaseMatchDialog(props) {
                 <h3>{TeamData[selectedTeams[1]]?.TeamName}</h3>
             </Stack>
             {scoreTeam1 === scoreTeam2 && renderPenaltyShootout()}
-            <Button
-                color="success"
-                variant="contained"
-                margin="normal"
-                onClick={handleClose}
+            <Stack
+                direction={"row"}
+                spacing={2}
+                margin={5}
+                justifyContent="center"
+                alignItems="center"
             >
-                Speichern
-            </Button>
+                <Button
+                    color="success"
+                    variant="contained"
+                    margin="normal"
+                    onClick={handleClose}
+                >
+                    Speichern
+                </Button>
+                <Button
+                    color="error"
+                    variant="contained"
+                    margin="normal"
+                    onClick={handleClose}
+                >
+                    Abbrechen
+                </Button>
+            </Stack>
         </Dialog>
     );
 }
